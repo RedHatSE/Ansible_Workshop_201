@@ -34,14 +34,38 @@ ssh-keygen -f ~/.ssh/test.rsa
        service:
           name: sshd
     state: restarted
-3. Users - Firewall
+3. - Conditionals - Firewall - install yum tools and  setup credentials
 
 
-Create a new User - allow items in Firewall via Handlers - Setup Group - 
+
+
+
 4. Ansible Galaxy
-Use Ansible Galaxy and Configure Varaible in Docker - 
+Use Ansible Galaxy and Configure Varaible in vars - 
+ansible-galaxy install linux-system-roles.cockpit
+ansible-galaxy install linux-system-roles.firewall
+set port to 8080 - 
+and configure podman - 
 
-
+---
+tasks:  
+  - name: Install RHEL/Fedora Web Console (Cockpit)
+    include_role:
+      name: linux-system-roles.cockpit
+    vars:
+      cockpit_packages: default
+       - cockpit-storaged
+       - cockpit-podman
+    when:  ansible_memtotal_mb >= 8024
+ 
+  - name: Configure Firewall for Web Console
+    include_role:
+      name: linux-system-roles.firewall
+    vars:
+      firewall:
+        service: cockpit
+        state: enabled
+    when:  ansible_memtotal_mb >= 8024
 
 5. Ansible Facts
 Configuring and Setting up a LVM using LVM Facts. 
