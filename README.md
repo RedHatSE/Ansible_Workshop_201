@@ -73,6 +73,39 @@ and configure podman -
     
     did it fail ? fix it ?
 
+---
+- name: isntall cockpit
+  hosts: web
+  become: true
+  tasks:  
+  - name: Install RHEL/Fedora Web Console (Cockpit)
+    include_role:
+      name: linux-system-roles.cockpit
+    vars:
+      cockpit_packages: 
+       - cockpit-storaged
+       - cockpit-networkmanager
+       - cockpit-ws
+       - cockpit-system
+    when:  ansible_memtotal_mb >= 2024
+ 
+  - name: Configure Firewall for Web Console
+    include_role:
+      name: linux-system-roles.firewall
+
+
+  - name: install package
+    package:
+      name: policycoreutils-python
+      state: present
+  - name: enable seport
+    seport:
+      ports: 9090
+      proto: tcp
+      setype: websm_port_t
+      state: present
+
+
 5. Ansible Facts
 Configuring and Setting up a LVM using LVM Facts. 
 
