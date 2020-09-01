@@ -44,11 +44,15 @@ ssh-keygen -f ~/.ssh/test.rsa
 Use Ansible Galaxy and Configure Varaible in vars - 
 ansible-galaxy install linux-system-roles.cockpit
 ansible-galaxy install linux-system-roles.firewall
-set port to 8080 - 
+- 
 and configure podman - 
 
 ---
-tasks:  
+- name: install cockpit
+  hosts: web
+  become: true
+  tasks:
+
   - name: Install RHEL/Fedora Web Console (Cockpit)
     include_role:
       name: linux-system-roles.cockpit
@@ -66,6 +70,8 @@ tasks:
         service: cockpit
         state: enabled
     when:  ansible_memtotal_mb >= 8024
+    
+    did it fail ? fix it ?
 
 5. Ansible Facts
 Configuring and Setting up a LVM using LVM Facts. 
